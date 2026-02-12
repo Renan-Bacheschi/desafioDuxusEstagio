@@ -4,6 +4,7 @@ import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.model.Time;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.Filter;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Service que possuirá as regras de negócio para o processamento dos dados
  * solicitados no desafio!
- *
+ * <p>
  * OBS ao candidato: PREFERENCIALMENTE, NÃO ALTERE AS ASSINATURAS DOS MÉTODOS!
  * Trabalhe com a proposta pura.
  *
@@ -23,16 +24,17 @@ public class ApiService {
     /**
      * Vai retornar um Time, com a composição do time daquela data
      */
-    public Time timeDaData(LocalDate data, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
+    public Time timeDaData(LocalDate data, List<Time> todosOsTimes) {
+        return todosOsTimes.stream()
+                .filter(time -> time.getData()
+                        .equals(data)).findFirst().orElse(null);
     }
 
     /**
      * Vai retornar o integrante que estiver presente na maior quantidade de times
      * dentro do período
      */
-    public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
+    public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
         // TODO Implementar método seguindo as instruções!
         return null;
     }
@@ -41,7 +43,7 @@ public class ApiService {
      * Vai retornar uma lista com os nomes dos integrantes do time mais comum
      * dentro do período
      */
-    public List<String> integrantesDoTimeMaisComum(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
+    public List<String> integrantesDoTimeMaisComum(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
         // TODO Implementar método seguindo as instruções!
         return null;
     }
@@ -49,7 +51,7 @@ public class ApiService {
     /**
      * Vai retornar a função mais comum nos times dentro do período
      */
-    public String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
+    public String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
         // TODO Implementar método seguindo as instruções!
         return null;
     }
@@ -66,7 +68,7 @@ public class ApiService {
     /**
      * Vai retornar o número (quantidade) de Franquias dentro do período
      */
-    public Map<String, Long> contagemPorFranquia(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
+    public Map<String, Long> contagemPorFranquia(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
         // TODO Implementar método seguindo as instruções!
         return null;
     }
@@ -74,7 +76,7 @@ public class ApiService {
     /**
      * Vai retornar o número (quantidade) de Funções dentro do período
      */
-    public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
+    public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
         // TODO Implementar método seguindo as instruções!
         return null;
     }
