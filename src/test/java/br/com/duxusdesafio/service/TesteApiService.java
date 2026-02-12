@@ -19,8 +19,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(DataProviderRunner.class)
 public class TesteApiService {
 
-    private final static LocalDate data1993 = LocalDate.of(1993,1, 1);
-    private final static LocalDate data1995 = LocalDate.of(1995,1, 1);
+    private final static LocalDate data1993 = LocalDate.of(1993, 1, 1);
+    private final static LocalDate data1995 = LocalDate.of(1995, 1, 1);
 
     @Spy
     private ApiService apiService;
@@ -64,7 +64,7 @@ public class TesteApiService {
 
         assertEquals(esperado, timeRetornado);
     }
-
+// dto após passar no teste
 
 
     @DataProvider
@@ -95,7 +95,6 @@ public class TesteApiService {
     }
 
 
-
     @DataProvider
     public static Object[][] testTimeMaisComumParams() {
         DadosParaTesteApiService dadosParaTesteApiService = new DadosParaTesteApiService();
@@ -122,13 +121,12 @@ public class TesteApiService {
 
         List<String> nomeDosIntegrantesDoTimeMaisComum = apiService.integrantesDoTimeMaisComum(dataInicial, dataFinal, todosOsTimes);
 
-        if(nomeDosIntegrantesDoTimeMaisComum != null){
+        if (nomeDosIntegrantesDoTimeMaisComum != null) {
             nomeDosIntegrantesDoTimeMaisComum.sort(Comparator.naturalOrder());
         }
 
         assertEquals(esperado, nomeDosIntegrantesDoTimeMaisComum);
     }
-
 
 
     @DataProvider
@@ -205,7 +203,6 @@ public class TesteApiService {
         Map<String, Long> contagemPorFranquia = apiService.contagemPorFranquia(dataInicial, dataFinal, todosOsTimes);
         assertEquals(esperado, contagemPorFranquia);
     }
-
 
 
     @DataProvider
