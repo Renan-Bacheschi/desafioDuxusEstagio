@@ -34,7 +34,7 @@ Testes
 
 ## Arquitetura Consultas
  #Requests/Responses
-![Arquitetura da Solução](docs/arquitetura.png)
+![Arquitetura da Solução](arquitetura.png)
 
 
 ## Arquitetura Cadastro 
