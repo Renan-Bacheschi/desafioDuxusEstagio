@@ -68,7 +68,7 @@ public class DadosParaTesteApiService {
         // composição detroid pistons
         composicaoTime1993.add(new ComposicaoTime(timeDetroidPistonsDe1993, denis_rodman));
 
-
+        // Criar serviço ou lógica sempre com base na entidade Time!
         composicaoTime1994E1995.addAll(composicaoTime1994);
         composicaoTime1994E1995.addAll(composicaoTime1995);
 
