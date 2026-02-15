@@ -6,8 +6,7 @@ import br.com.duxusdesafio.model.Time;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -61,8 +60,32 @@ public class ApiService {
      * Vai retornar o nome da Franquia mais comum nos times dentro do período
      */
     public String franquiaMaisFamosa(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        List<Time> filtrados = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
+
+        Set<Integrante> integrantesUnicos = new HashSet<>();
+
+        for (Time time : filtrados) {
+            for (ComposicaoTime comp : time.getComposicaoTime()) {
+                integrantesUnicos.add(comp.getIntegrante());
+            }
+        }
+        // contando franquias usando apenas pessoas únicas
+        Map<String, Long> contagem = new HashMap<>();
+        for (Integrante integrante : integrantesUnicos) {
+            String franquia = integrante.getFranquia();
+            contagem.put(franquia, contagem.getOrDefault(franquia, 0L) + 1);
+        }
+        // Buscando a vencedora
+        String famosa = null;
+        long maiorContagem = -1;
+        for (Map.Entry<String, Long> entry : contagem.entrySet()) {
+            if (entry.getValue() >= maiorContagem) {
+                maiorContagem = entry.getValue();
+                famosa = entry.getKey();
+            }
+        }
+
+        return famosa;
     }
 
 
