@@ -2,6 +2,7 @@ package br.com.duxusdesafio.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +60,7 @@ public class TimeController {
     }
 
     @GetMapping("/da-data")
-    public ResponseEntity<List<String>> getTimeDaData(@RequestParam String data) {
+    public ResponseEntity<Map<String, Object>> getTimeDaData(@RequestParam String data) {
         List<Time> todosOsTimes = timeRepository.findAll();
         LocalDate dataBusca = LocalDate.parse(data);
 
@@ -69,11 +70,15 @@ public class TimeController {
             return ResponseEntity.notFound().build();
         }
 
-        List<String> resultado = timeEncontrado.getComposicaoTime().stream()
-                .map(c -> c.getIntegrante().getNome())
+        List<String> integrantesFormatados = timeEncontrado.getComposicaoTime().stream()
+                .map(c -> c.getIntegrante().getNome() + " (" + c.getIntegrante().getFranquia() + ")")
                 .toList();
 
-        return ResponseEntity.ok(resultado);
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("data", dataBusca);
+        resposta.put("integrantes", integrantesFormatados);
+
+        return ResponseEntity.ok(resposta);
     }
 
     @GetMapping("/contagem-por-funcao")
