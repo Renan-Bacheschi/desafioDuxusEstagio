@@ -90,11 +90,37 @@ public class TimeController {
         List<Time> todosOsTimes = timeRepository.findAll();
 
 
-        LocalDate inicio = (dataInicial != null && !dataInicial.isEmpty()) ? LocalDate.parse(dataInicial) : null;
-        LocalDate fim = (dataFinal != null && !dataFinal.isEmpty()) ? LocalDate.parse(dataFinal) : null;
+        LocalDate inicio = tratarData(dataInicial);
+        LocalDate fim = tratarData(dataFinal);
 
         Map<String, Long> resultado = apiService.contagemPorFuncao(inicio, fim, todosOsTimes);
 
         return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/franquia-mais-famosa")
+    public ResponseEntity<Map<String, String>> getFranquiaMaisFamosa(
+            @RequestParam(required = false) String dataInicial,
+            @RequestParam(required = false) String dataFinal) {
+
+        List<Time> TodosOsTimes = timeRepository.findAll();
+
+        LocalDate inicio = tratarData(dataInicial);
+        LocalDate fim = tratarData(dataFinal);
+
+        String franquiaMaisFamosa = apiService.franquiaMaisFamosa(inicio, fim, TodosOsTimes);
+
+        Map<String, String> resposta = new HashMap<>();
+        resposta.put("franquia", franquiaMaisFamosa);
+
+        return ResponseEntity.ok(resposta);
+    }
+
+    // Método auxiliar para datas
+    private LocalDate tratarData(String data) {
+        if (data == null || data.isEmpty() || data.equalsIgnoreCase("null")) {
+            return null;
+        }
+        return LocalDate.parse(data);
     }
 }
