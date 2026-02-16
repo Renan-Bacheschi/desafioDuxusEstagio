@@ -1,7 +1,8 @@
 package br.com.duxusdesafio.exceptions;
 
 public class PeriodoSemDadosException extends RuntimeException {
-    public PeriodoSemDadosException() {
-        super("Não existem registros de jogos no período informado.");
+    // Agora ela aceita uma mensagem customizada!
+    public PeriodoSemDadosException(String mensagem) {
+        super(mensagem);
     }
 }

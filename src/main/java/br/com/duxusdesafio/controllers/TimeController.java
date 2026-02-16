@@ -84,7 +84,6 @@ public class TimeController {
 
     @GetMapping("/contagem-por-funcao")
     public ResponseEntity<Map<String, Long>> getContagemPorFuncao(
-            // Caso tenha datas nulas, Aplicação continua
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
@@ -92,7 +91,7 @@ public class TimeController {
         Map<String, Long> resultado = apiService.contagemPorFuncao(dataInicial, dataFinal, todosOsTimes);
 
         if (resultado == null || resultado.isEmpty()) {
-            throw new PeriodoSemDadosException();
+            throw new PeriodoSemDadosException("Nenhuma função encontrada no periodo informado.");
         }
         return  ResponseEntity.ok(resultado);
     }
@@ -106,7 +105,7 @@ public class TimeController {
         String franquiaMaisFamosa = apiService.franquiaMaisFamosa(dataInicial, dataFinal, todosOsTimes);
 
         if (franquiaMaisFamosa == null) {
-            throw new PeriodoSemDadosException();
+            throw new PeriodoSemDadosException("Nenhuma franquia encontrada no período informado.");
         }
 
         return ResponseEntity.ok(Map.of("Franquia", franquiaMaisFamosa));

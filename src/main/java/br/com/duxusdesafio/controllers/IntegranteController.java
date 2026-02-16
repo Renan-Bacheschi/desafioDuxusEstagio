@@ -20,13 +20,13 @@ import java.util.*;
 //@CrossOrigin(origins = "*") // Config abrindo acesso ao Front Futuramente
 public class IntegranteController {
 
-    private final IntegranteRepository repository;
+    private final IntegranteRepository integranteRepository;
     private final TimeRepository timeRepository;
     private final ApiService apiService;
 
     // Injeção via construtor, SOLID
-    public IntegranteController(IntegranteRepository repository, TimeRepository timeRepository, ApiService apiService) {
-        this.repository = repository;
+    public IntegranteController(IntegranteRepository integranteRepository, TimeRepository timeRepository, ApiService apiService) {
+        this.integranteRepository = integranteRepository;
         this.timeRepository = timeRepository;
         this.apiService = apiService;
     }
@@ -39,7 +39,7 @@ public class IntegranteController {
         novoIntegrante.setFuncao(dto.funcao());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(repository.save(novoIntegrante));
+                .body(integranteRepository.save(novoIntegrante));
     }
 
     @GetMapping("/mais-usado")
@@ -51,7 +51,7 @@ public class IntegranteController {
         Integrante maisUsado = apiService.integranteMaisUsado(dataInicial, dataFinal, todosOsTimes);
 
         if (maisUsado == null) {
-            throw new PeriodoSemDadosException();
+            throw new PeriodoSemDadosException("Nenhum integrante encontrado no período informado.");
         }
 
         return ResponseEntity.ok(Map.of("integrante", maisUsado.getNome()));
