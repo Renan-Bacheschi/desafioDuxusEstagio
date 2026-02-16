@@ -37,9 +37,5 @@ Testes
 ![Arquitetura da Solução](arquitetura.png)
 
 
-## Arquitetura Cadastro 
-- Resquests/responses
-
-
 
 

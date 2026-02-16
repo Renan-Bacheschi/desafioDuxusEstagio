@@ -2,7 +2,6 @@ package br.com.duxusdesafio.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,10 +60,11 @@ public class TimeController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new TimeResponseDTO(salvo.getId(), salvo.getData(), nomes));
     }
-//  -------------------- Metodos de consulta
+
+    //  -------------------- Metodos de consulta
     @GetMapping("/da-data")
     public ResponseEntity<Map<String, Object>> getTimeDaData(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate data) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
         List<Time> todosOsTimes = timeRepository.findAll();
 
         Time timeEncontrado = apiService.timeDaData(data, todosOsTimes);
@@ -77,11 +77,9 @@ public class TimeController {
                 .map(c -> c.getIntegrante().getNome() + " (" + c.getIntegrante().getFranquia() + ")")
                 .toList();
 
-        Map<String, Object> resposta = new HashMap<>();
-        resposta.put("data", data);
-        resposta.put("integrantes", integrantesFormatados);
 
-        return ResponseEntity.ok(resposta);
+        return ResponseEntity.ok(Map.of("data", data,
+                "integrantes", integrantesFormatados));
     }
 
     @GetMapping("/contagem-por-funcao")
@@ -93,7 +91,7 @@ public class TimeController {
         List<Time> todosOsTimes = timeRepository.findAll();
         Map<String, Long> resultado = apiService.contagemPorFuncao(dataInicial, dataFinal, todosOsTimes);
 
-        if (resultado == null || resultado.isEmpty()){
+        if (resultado == null || resultado.isEmpty()) {
             throw new PeriodoSemDadosException();
         }
         return  ResponseEntity.ok(resultado);
@@ -104,17 +102,14 @@ public class TimeController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
-        List<Time> TodosOsTimes = timeRepository.findAll();
-        String franquiaMaisFamosa = apiService.franquiaMaisFamosa(dataInicial, dataFinal, TodosOsTimes);
+        List<Time> todosOsTimes = timeRepository.findAll();
+        String franquiaMaisFamosa = apiService.franquiaMaisFamosa(dataInicial, dataFinal, todosOsTimes);
 
         if (franquiaMaisFamosa == null) {
             throw new PeriodoSemDadosException();
         }
 
-        Map<String, String> resposta = new HashMap<>();
-        resposta.put("franquia", franquiaMaisFamosa);
-
-        return ResponseEntity.ok(resposta);
+        return ResponseEntity.ok(Map.of("Franquia", franquiaMaisFamosa));
     }
 
 }
