@@ -35,26 +35,26 @@ public class ApiService {
      * dentro do período
      */
     public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-       List<Time> filtrados = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
-       if(filtrados.isEmpty())return null;
+        List<Time> filtrados = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
+        if (filtrados.isEmpty()) return null;
 
-       Map<Integrante, Long> contagem = new HashMap<>();
-       for (Time time : filtrados) {
-           for (ComposicaoTime comp : time.getComposicaoTime()){
-               Integrante integrante = comp.getIntegrante();
-               contagem.put(integrante, contagem.getOrDefault(integrante, 0L) + 1);
-           }
-       }
-       Integrante maisUsado = null;
-       long maiorValor = -1;
+        Map<Integrante, Long> contagem = new HashMap<>();
+        for (Time time : filtrados) {
+            for (ComposicaoTime comp : time.getComposicaoTime()) {
+                Integrante integrante = comp.getIntegrante();
+                contagem.put(integrante, contagem.getOrDefault(integrante, 0L) + 1);
+            }
+        }
+        Integrante maisUsado = null;
+        long maiorValor = -1;
 
-       for (Map.Entry<Integrante, Long> entry : contagem.entrySet()) {
-           if (entry.getValue() > maiorValor){
-               maiorValor = entry.getValue();
-               maisUsado = entry.getKey();
-           }
-       }
-       return maisUsado;
+        for (Map.Entry<Integrante, Long> entry : contagem.entrySet()) {
+            if (entry.getValue() > maiorValor) {
+                maiorValor = entry.getValue();
+                maisUsado = entry.getKey();
+            }
+        }
+        return maisUsado;
     }
 
     /**

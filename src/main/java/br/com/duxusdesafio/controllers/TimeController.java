@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.duxusdesafio.exceptions.PeriodoSemDadosException;
+import br.com.duxusdesafio.exceptions.TimeNaoEncontradoException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,7 +70,7 @@ public class TimeController {
         Time timeEncontrado = apiService.timeDaData(data, todosOsTimes);
 
         if (timeEncontrado == null) {
-            return ResponseEntity.notFound().build();
+            throw new TimeNaoEncontradoException(data);
         }
 
         List<String> integrantesFormatados = timeEncontrado.getComposicaoTime().stream()
@@ -89,10 +91,12 @@ public class TimeController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
         List<Time> todosOsTimes = timeRepository.findAll();
-
         Map<String, Long> resultado = apiService.contagemPorFuncao(dataInicial, dataFinal, todosOsTimes);
 
-        return ResponseEntity.ok(resultado);
+        if (resultado == null || resultado.isEmpty()){
+            throw new PeriodoSemDadosException();
+        }
+        return  ResponseEntity.ok(resultado);
     }
 
     @GetMapping("/franquia-mais-famosa")
@@ -101,8 +105,11 @@ public class TimeController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
         List<Time> TodosOsTimes = timeRepository.findAll();
-
         String franquiaMaisFamosa = apiService.franquiaMaisFamosa(dataInicial, dataFinal, TodosOsTimes);
+
+        if (franquiaMaisFamosa == null) {
+            throw new PeriodoSemDadosException();
+        }
 
         Map<String, String> resposta = new HashMap<>();
         resposta.put("franquia", franquiaMaisFamosa);
