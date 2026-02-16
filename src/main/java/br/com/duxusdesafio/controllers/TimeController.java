@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,13 +59,13 @@ public class TimeController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new TimeResponseDTO(salvo.getId(), salvo.getData(), nomes));
     }
-
+//  -------------------- Metodos de consulta
     @GetMapping("/da-data")
-    public ResponseEntity<Map<String, Object>> getTimeDaData(@RequestParam String data) {
+    public ResponseEntity<Map<String, Object>> getTimeDaData(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate data) {
         List<Time> todosOsTimes = timeRepository.findAll();
-        LocalDate dataBusca = LocalDate.parse(data);
 
-        Time timeEncontrado = apiService.timeDaData(dataBusca, todosOsTimes);
+        Time timeEncontrado = apiService.timeDaData(data, todosOsTimes);
 
         if (timeEncontrado == null) {
             return ResponseEntity.notFound().build();
@@ -75,7 +76,7 @@ public class TimeController {
                 .toList();
 
         Map<String, Object> resposta = new HashMap<>();
-        resposta.put("data", dataBusca);
+        resposta.put("data", data);
         resposta.put("integrantes", integrantesFormatados);
 
         return ResponseEntity.ok(resposta);
@@ -84,31 +85,24 @@ public class TimeController {
     @GetMapping("/contagem-por-funcao")
     public ResponseEntity<Map<String, Long>> getContagemPorFuncao(
             // Caso tenha datas nulas, Aplicação continua
-            @RequestParam(required = false) String dataInicial,
-            @RequestParam(required = false) String dataFinal) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
         List<Time> todosOsTimes = timeRepository.findAll();
 
-
-        LocalDate inicio = tratarData(dataInicial);
-        LocalDate fim = tratarData(dataFinal);
-
-        Map<String, Long> resultado = apiService.contagemPorFuncao(inicio, fim, todosOsTimes);
+        Map<String, Long> resultado = apiService.contagemPorFuncao(dataInicial, dataFinal, todosOsTimes);
 
         return ResponseEntity.ok(resultado);
     }
 
     @GetMapping("/franquia-mais-famosa")
     public ResponseEntity<Map<String, String>> getFranquiaMaisFamosa(
-            @RequestParam(required = false) String dataInicial,
-            @RequestParam(required = false) String dataFinal) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
         List<Time> TodosOsTimes = timeRepository.findAll();
 
-        LocalDate inicio = tratarData(dataInicial);
-        LocalDate fim = tratarData(dataFinal);
-
-        String franquiaMaisFamosa = apiService.franquiaMaisFamosa(inicio, fim, TodosOsTimes);
+        String franquiaMaisFamosa = apiService.franquiaMaisFamosa(dataInicial, dataFinal, TodosOsTimes);
 
         Map<String, String> resposta = new HashMap<>();
         resposta.put("franquia", franquiaMaisFamosa);
@@ -116,11 +110,4 @@ public class TimeController {
         return ResponseEntity.ok(resposta);
     }
 
-    // Método auxiliar para datas
-    private LocalDate tratarData(String data) {
-        if (data == null || data.isEmpty() || data.equalsIgnoreCase("null")) {
-            return null;
-        }
-        return LocalDate.parse(data);
-    }
 }
