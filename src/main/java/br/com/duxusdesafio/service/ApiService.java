@@ -70,19 +70,39 @@ public class ApiService {
      * Vai retornar a função mais comum nos times dentro do período
      */
     public String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        List<Time> filtraComun = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
+        Set<Integrante> integrantesUnicos = new HashSet<>();
+
+        for (Time time : filtraComun) {
+            for (ComposicaoTime comp : time.getComposicaoTime()) {
+                integrantesUnicos.add(comp.getIntegrante());
+            }
+        }
+        Map<String, Long> contando = new HashMap<>();
+        for (Integrante integrante : integrantesUnicos) {
+            String funcao = integrante.getFuncao();
+            contando.put(funcao, contando.getOrDefault(funcao, 0L) + 1);
+        }
+        String resultadoComun = null;
+        long contados = -1;
+        for (Map.Entry<String, Long> entry : contando.entrySet()) {
+            if (entry.getValue()>= contados){
+                contados = entry.getValue();
+                resultadoComun = entry.getKey();
+            }
+        }
+        return resultadoComun;
     }
 
     /**
      * Vai retornar o nome da Franquia mais comum nos times dentro do período
      */
     public String franquiaMaisFamosa(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-        List<Time> filtrados = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
+        List<Time> filtraFamosa = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
 
         Set<Integrante> integrantesUnicos = new HashSet<>();
 
-        for (Time time : filtrados) {
+        for (Time time : filtraFamosa) {
             for (ComposicaoTime comp : time.getComposicaoTime()) {
                 integrantesUnicos.add(comp.getIntegrante());
             }
