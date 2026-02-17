@@ -96,6 +96,21 @@ public class TimeController {
         return  ResponseEntity.ok(resultado);
     }
 
+    @GetMapping("/funcao-mais-comum")
+    public ResponseEntity<Map<String, String>> getMaisComun(
+            @RequestParam(required = false) @DateTimeFormat(iso =  DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(required = false) @DateTimeFormat(iso =  DateTimeFormat.ISO.DATE) LocalDate dataFinal){
+
+        List<Time> todosOsTimes = timeRepository.findAll();
+        String maisC = apiService.funcaoMaisComum(dataInicial, dataFinal, todosOsTimes);
+
+        if (maisC ==  null) {
+            throw new PeriodoSemDadosException("Nenhuma função encontrada no período informado.");
+        }
+
+        return ResponseEntity.ok(Map.of("Função mais comum: ", maisC));
+    }
+
     @GetMapping("/franquia-mais-famosa")
     public ResponseEntity<Map<String, String>> getFranquiaMaisFamosa(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
