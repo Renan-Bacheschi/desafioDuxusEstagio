@@ -131,8 +131,23 @@ public class ApiService {
      * Vai retornar o número (quantidade) de Franquias dentro do período
      */
     public Map<String, Long> contagemPorFranquia(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        List<Time> filtraQtdFranquia = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
+        Set<Integrante> integrantesUnicos = new HashSet<>();
+        for (Time time: filtraQtdFranquia) {
+            for (ComposicaoTime comp : time.getComposicaoTime()) {
+                integrantesUnicos.add(comp.getIntegrante());
+            }
+        }
+        Map<String, Long> contandoFranquia = new HashMap<>();
+        for (Integrante integrante: integrantesUnicos) {
+            String franquia = integrante.getFranquia();
+            if (franquia != null) {
+                contandoFranquia.put(franquia, contandoFranquia.getOrDefault(franquia, 0L) + 1);
+            }
+        }
+
+        return contandoFranquia;
+
     }
 
     /**

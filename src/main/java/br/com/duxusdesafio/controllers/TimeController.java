@@ -126,4 +126,19 @@ public class TimeController {
         return ResponseEntity.ok(Map.of("Franquia", franquiaMaisFamosa));
     }
 
+    @GetMapping("/contagem-por-franquia")
+    public ResponseEntity<Map<String, Long>> getContagemPorFranquia(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+
+        List<Time> todosOsTimes = timeRepository.findAll();
+        Map<String, Long> resultado = apiService.contagemPorFranquia(dataInicial, dataFinal, todosOsTimes);
+
+        if (resultado.isEmpty()) {
+            throw new PeriodoSemDadosException("Nenhuma franquia encontrada no período informado.");
+        }
+
+        return ResponseEntity.ok(resultado);
+    }
+
 }
