@@ -22,12 +22,30 @@ import java.util.stream.Collectors;
 public class ApiService {
 
     /**
+     * Busca um time pelo nome e pela data exata
+     */
+    public Time buscarTimePorNomeEData(String nome, LocalDate data, List<Time> todosOsTimes) {
+        if (todosOsTimes == null || nome == null || data == null) {
+            return null;
+        }
+        for (Time time : todosOsTimes) {
+            if (time.getData().equals(data) && time.getNome().equalsIgnoreCase(nome)) {
+                return time;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Vai retornar um Time, com a composição do time daquela data
      */
     public Time timeDaData(LocalDate data, List<Time> todosOsTimes) {
-        return todosOsTimes.stream()
-                .filter(time -> time.getData()
-                        .equals(data)).findFirst().orElse(null);
+        for (Time time : todosOsTimes) {
+            if (time.getData().equals(data)) {
+                return time;
+            }
+        }
+        return null;
     }
 
     /**
@@ -62,18 +80,44 @@ public class ApiService {
      * dentro do período
      */
     public List<String> integrantesDoTimeMaisComum(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        List<Time> filtrados = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
+        if (filtrados.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Map<Set<Integrante>, Integer> contagemComposicoes = new HashMap<>();
+        for (Time time : filtrados) {
+            Set<Integrante> integrantesDoTime = new HashSet<>();
+            for (ComposicaoTime comp : time.getComposicaoTime()) {
+                integrantesDoTime.add(comp.getIntegrante());
+            }
+            if (!integrantesDoTime.isEmpty()) {
+                contagemComposicoes.put(integrantesDoTime, contagemComposicoes.getOrDefault(integrantesDoTime, 0) + 1);
+            }
+        }
+        Set<Integrante> composicaoVencedora = null;
+        int max = -1;
+        for (Map.Entry<Set<Integrante>, Integer> entry : contagemComposicoes.entrySet()) {
+            if (entry.getValue() > max) {
+                max = entry.getValue();
+                composicaoVencedora = entry.getKey();
+            }
+        }
+        List<String> nomesResultado = new ArrayList<>();
+        if (composicaoVencedora != null) {
+            for (Integrante i : composicaoVencedora) {
+                nomesResultado.add(i.getNome());
+            }
+        }
+        return nomesResultado;
     }
-
     /**
      * Vai retornar a função mais comum nos times dentro do período
      */
     public String funcaoMaisComum(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-        List<Time> filtraComun = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
+        List<Time> filtraComum = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
         Set<Integrante> integrantesUnicos = new HashSet<>();
 
-        for (Time time : filtraComun) {
+        for (Time time : filtraComum) {
             for (ComposicaoTime comp : time.getComposicaoTime()) {
                 integrantesUnicos.add(comp.getIntegrante());
             }
@@ -166,11 +210,19 @@ public class ApiService {
 
     // DRY - Utilitário para filtrar com base em um intervalo.
     private List<Time> filtrarPorPeriodo(LocalDate inicio, LocalDate fim, List<Time> todosOsTimes) {
-        return todosOsTimes.stream()
-                .filter(time -> (inicio == null || !time.getData().isBefore(inicio)) &&
-                        (fim == null || !time.getData().isAfter(fim)))
-                .collect(Collectors.toList());
+        List<Time> filtrados = new ArrayList<>();
+        if (todosOsTimes == null) return filtrados;
 
+        for (Time time : todosOsTimes) {
+            LocalDate dataTime = time.getData();
+            boolean atendeInicio = (inicio == null || !dataTime.isBefore(inicio));
+            boolean atendeFim = (fim == null || !dataTime.isAfter(fim));
+
+            if (atendeInicio && atendeFim) {
+                filtrados.add(time);
+            }
+        }
+        return filtrados;
     }
 
 }
