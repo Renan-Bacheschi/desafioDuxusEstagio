@@ -17,7 +17,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/integrantes")
-//@CrossOrigin(origins = "*") // Config abrindo acesso ao Front Futuramente
+@CrossOrigin(origins = "*") // Config abrindo acesso ao Front Futuramente
 public class IntegranteController {
 
     private final IntegranteRepository integranteRepository;
@@ -40,6 +40,11 @@ public class IntegranteController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(integranteRepository.save(novoIntegrante));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Integrante>> listarTodos() {
+        return ResponseEntity.ok(integranteRepository.findAll());
     }
 
     @GetMapping("/mais-usado")
