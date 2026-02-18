@@ -1,6 +1,7 @@
 package br.com.duxusdesafio.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -14,9 +15,11 @@ public class ComposicaoTime {
 	private long id;
 	
 	@ManyToOne
+    @JsonBackReference
 	private Time time;
 
 	@ManyToOne
+    @JsonBackReference
 	private Integrante integrante;
 
 	public ComposicaoTime() {
