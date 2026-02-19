@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
-
 /**
  * Service que possuirá as regras de negócio para o processamento dos dados
  * solicitados no desafio!
@@ -199,16 +197,24 @@ public class ApiService {
      */
     public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
         List<Time> filtrados = filtrarPorPeriodo(dataInicial, dataFinal, todosOsTimes);
+        Set<Integrante> integrantesUnicos = new HashSet<>();
+        for (Time time : filtrados) {
+            for (ComposicaoTime comp : time.getComposicaoTime()) {
+                integrantesUnicos.add(comp.getIntegrante());
+            }
+        }
 
-        return filtrados.stream()
-                .flatMap(time -> time.getComposicaoTime().stream())
-                .map(ComposicaoTime::getIntegrante) // Pega o objeto Integrante completo
-                .distinct() // Remove Jordan duplicado antes de contar
-                .map(Integrante::getFuncao) // Pega a função da pessoa única
-                .collect(Collectors.groupingBy(f -> f, Collectors.counting()));
+        Map<String, Long> contagemFuncao = new HashMap<>();
+        for (Integrante integrante : integrantesUnicos) {
+            String funcao = integrante.getFuncao();
+            if (funcao != null) {
+                contagemFuncao.put(funcao, contagemFuncao.getOrDefault(funcao, 0L) + 1);
+            }
+        }
+        return contagemFuncao;
     }
 
-    // DRY - Utilitário para filtrar com base em um intervalo.
+    // DRY
     private List<Time> filtrarPorPeriodo(LocalDate inicio, LocalDate fim, List<Time> todosOsTimes) {
         List<Time> filtrados = new ArrayList<>();
         if (todosOsTimes == null) return filtrados;
