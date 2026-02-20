@@ -202,7 +202,8 @@ public class TimeController {
         if (resultado == null || resultado.isEmpty()) {
             throw new PeriodoSemDadosException("Nenhuma função encontrada no periodo informado.");
         }
-        return  ResponseEntity.ok(resultado);
+
+        return ResponseEntity.ok(resultado);
     }
 
 }
