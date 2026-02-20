@@ -26,7 +26,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/times")
-@CrossOrigin(origins = "*") // Config abrindo acesso ao Front Futuramente
+@CrossOrigin(origins = "*")
 public class TimeController {
 
     private final TimeRepository timeRepository;
@@ -44,8 +44,8 @@ public class TimeController {
     @PostMapping
     public ResponseEntity<TimeResponseDTO> cadastrar(@Valid @RequestBody TimeRequestDTO dto) {
         List<ComposicaoTime> listaComposicao = new ArrayList<>();
-
         Time novoTime = new Time(dto.nome(), dto.data(), listaComposicao);
+
         for (Long id : dto.integrantesIds()) {
             Integrante integrante = integranteRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("ID não encontrado: " + id));
@@ -55,13 +55,19 @@ public class TimeController {
         }
 
         Time salvo = timeRepository.save(novoTime);
+
         List<String> nomesDosIntegrantes = new ArrayList<>();
         for (ComposicaoTime c : salvo.getComposicaoTime()) {
-            nomesDosIntegrantes.add(c.getIntegrante().getNome());
+            String nomeInteg = c.getIntegrante().getNome();
+            if (!nomesDosIntegrantes.contains(nomeInteg)) {
+                nomesDosIntegrantes.add(nomeInteg);
+            }
         }
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new TimeResponseDTO(salvo.getId(), salvo.getNome(), salvo.getData(), nomesDosIntegrantes));
     }
+
     // -------------- Metodo de consulta adicional
     @GetMapping("/buscar-data-com-nome")
     public ResponseEntity<Map<String, Object>> getTimeDaDataComNome(
@@ -99,6 +105,7 @@ public class TimeController {
         if (timeEncontrado == null) {
             throw new TimeNaoEncontradoException(data);
         }
+
         List<String> integrantesFormatados = new ArrayList<>();
         if (timeEncontrado.getComposicaoTime() != null) {
             for (ComposicaoTime c : timeEncontrado.getComposicaoTime()) {
@@ -107,11 +114,13 @@ public class TimeController {
                 integrantesFormatados.add(nome + " (" + franquia + ")");
             }
         }
+
         return ResponseEntity.ok(Map.of(
                 "data", data,
                 "integrantes", integrantesFormatados
         ));
     }
+
     @GetMapping("/integrante-mais-usado")
     public ResponseEntity<Map<String, Object>> getIntegranteMaisUsado(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
@@ -148,13 +157,13 @@ public class TimeController {
 
     @GetMapping("/funcao-mais-comum")
     public ResponseEntity<Map<String, String>> getMaisComum(
-            @RequestParam(required = false) @DateTimeFormat(iso =  DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam(required = false) @DateTimeFormat(iso =  DateTimeFormat.ISO.DATE) LocalDate dataFinal){
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
         List<Time> todosOsTimes = timeRepository.findAll();
         String maisC = apiService.funcaoMaisComum(dataInicial, dataFinal, todosOsTimes);
 
-        if (maisC ==  null) {
+        if (maisC == null) {
             throw new PeriodoSemDadosException("Nenhuma função encontrada no período informado.");
         }
 
