@@ -76,7 +76,7 @@ public class DadosParaTeste3Parametros {
         todosOsTimes.add(timeDetroidPistonsDe1993);
     }
 
-        // --- GETTERS E SETTERS ---
+    // --- GETTERS E SETTERS ---
 
     public List<Time> getTodosOsTimes() {
         return todosOsTimes;

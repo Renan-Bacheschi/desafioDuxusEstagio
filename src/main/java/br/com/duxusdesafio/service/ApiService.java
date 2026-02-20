@@ -31,6 +31,7 @@ public class ApiService {
                 return time;
             }
         }
+
         return null;
     }
 
@@ -43,6 +44,7 @@ public class ApiService {
                 return time;
             }
         }
+
         return null;
     }
 
@@ -61,6 +63,7 @@ public class ApiService {
                 contagem.put(integrante, contagem.getOrDefault(integrante, 0L) + 1);
             }
         }
+
         Integrante maisUsado = null;
         long maiorValor = -1;
 
@@ -70,6 +73,7 @@ public class ApiService {
                 maisUsado = entry.getKey();
             }
         }
+
         return maisUsado;
     }
 
@@ -82,6 +86,7 @@ public class ApiService {
         if (filtrados.isEmpty()) {
             return new ArrayList<>();
         }
+
         Map<Set<Integrante>, Integer> contagemComposicoes = new HashMap<>();
         for (Time time : filtrados) {
             Set<Integrante> integrantesDoTime = new HashSet<>();
@@ -92,6 +97,7 @@ public class ApiService {
                 contagemComposicoes.put(integrantesDoTime, contagemComposicoes.getOrDefault(integrantesDoTime, 0) + 1);
             }
         }
+
         Set<Integrante> composicaoVencedora = null;
         int max = -1;
         for (Map.Entry<Set<Integrante>, Integer> entry : contagemComposicoes.entrySet()) {
@@ -100,12 +106,14 @@ public class ApiService {
                 composicaoVencedora = entry.getKey();
             }
         }
+
         List<String> nomesResultado = new ArrayList<>();
         if (composicaoVencedora != null) {
             for (Integrante i : composicaoVencedora) {
                 nomesResultado.add(i.getNome());
             }
         }
+
         return nomesResultado;
     }
     /**
@@ -120,11 +128,13 @@ public class ApiService {
                 integrantesUnicos.add(comp.getIntegrante());
             }
         }
+
         Map<String, Long> contando = new HashMap<>();
         for (Integrante integrante : integrantesUnicos) {
             String funcao = integrante.getFuncao();
             contando.put(funcao, contando.getOrDefault(funcao, 0L) + 1);
         }
+
         String resultadoComun = null;
         long contados = -1;
         for (Map.Entry<String, Long> entry : contando.entrySet()) {
@@ -133,6 +143,7 @@ public class ApiService {
                 resultadoComun = entry.getKey();
             }
         }
+
         return resultadoComun;
     }
 
@@ -149,12 +160,14 @@ public class ApiService {
                 integrantesUnicos.add(comp.getIntegrante());
             }
         }
+
         // contando franquias usando apenas pessoas únicas
         Map<String, Long> contagem = new HashMap<>();
         for (Integrante integrante : integrantesUnicos) {
             String franquia = integrante.getFranquia();
             contagem.put(franquia, contagem.getOrDefault(franquia, 0L) + 1);
         }
+
         // Buscando a vencedora
         String famosa = null;
         long maiorContagem = -1;
@@ -180,6 +193,7 @@ public class ApiService {
                 integrantesUnicos.add(comp.getIntegrante());
             }
         }
+
         Map<String, Long> contandoFranquia = new HashMap<>();
         for (Integrante integrante: integrantesUnicos) {
             String franquia = integrante.getFranquia();
@@ -211,6 +225,7 @@ public class ApiService {
                 contagemFuncao.put(funcao, contagemFuncao.getOrDefault(funcao, 0L) + 1);
             }
         }
+
         return contagemFuncao;
     }
 
@@ -228,6 +243,7 @@ public class ApiService {
                 filtrados.add(time);
             }
         }
+
         return filtrados;
     }
 

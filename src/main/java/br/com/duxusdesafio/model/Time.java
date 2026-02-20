@@ -1,6 +1,7 @@
 package br.com.duxusdesafio.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -10,40 +11,41 @@ import java.util.Objects;
 @Table(name = "time")
 public class Time {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column
     private String nome;
 
-	@Column
+    @Column
     private LocalDate data;
 
     @JsonManagedReference
-	@OneToMany(mappedBy = "time", cascade = CascadeType.ALL)
-	private List<ComposicaoTime> composicaoTime;
+    @OneToMany(mappedBy = "time", cascade = CascadeType.ALL)
+    private List<ComposicaoTime> composicaoTime;
 
-	public Time() {
-	}
+    public Time() {
+    }
 
-	public Time(String nome, LocalDate data, List<ComposicaoTime> composicaoTime) {
-		this.nome = nome;
-        this.data = data;
-		this.composicaoTime = composicaoTime;
-	}
-    public Time( LocalDate data, List<ComposicaoTime> composicaoTime) {
+    public Time(String nome, LocalDate data, List<ComposicaoTime> composicaoTime) {
+        this.nome = nome;
         this.data = data;
         this.composicaoTime = composicaoTime;
     }
 
-	public long getId() {
-		return id;
-	}
+    public Time(LocalDate data, List<ComposicaoTime> composicaoTime) {
+        this.data = data;
+        this.composicaoTime = composicaoTime;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;
@@ -53,43 +55,43 @@ public class Time {
         this.nome = nome;
     }
 
-	public LocalDate getData() {
-		return data;
-	}
+    public LocalDate getData() {
+        return data;
+    }
 
-	public void setData(LocalDate data) {
-		this.data = data;
-	}
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
 
-	public List<ComposicaoTime> getComposicaoTime() {
-		return composicaoTime;
-	}
+    public List<ComposicaoTime> getComposicaoTime() {
+        return composicaoTime;
+    }
 
-	public void setComposicaoTime(List<ComposicaoTime> composicaoTime) {
-		this.composicaoTime = composicaoTime;
-	}
+    public void setComposicaoTime(List<ComposicaoTime> composicaoTime) {
+        this.composicaoTime = composicaoTime;
+    }
 
 
-	@Override
-	public final boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof Time)) return false;
-		Time time = (Time) o;
-		return id == time.id && Objects.equals(data, time.data) &&
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Time)) return false;
+        Time time = (Time) o;
+        return id == time.id && Objects.equals(data, time.data) &&
                 Objects.equals(nome, time.nome);
-	}
+    }
 
-	@Override
-	public final int hashCode() {
-		return Objects.hash(id, nome, data);
-	}
+    @Override
+    public final int hashCode() {
+        return Objects.hash(id, nome, data);
+    }
 
-	@Override
-	public String toString() {
-		return "Time{" +
-				"id=" + id +
+    @Override
+    public String toString() {
+        return "Time{" +
+                "id=" + id +
                 ", nome='" + nome + '\'' +
-				", data=" + data +
-				'}';
-	}
+                ", data=" + data +
+                '}';
+    }
 }

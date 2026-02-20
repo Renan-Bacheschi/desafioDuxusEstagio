@@ -1,6 +1,7 @@
 package br.com.duxusdesafio.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import br.com.duxusdesafio.model.Time;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
