@@ -12,12 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.*;
 
 @RestController
 @RequestMapping("/api/integrantes")
-@CrossOrigin(origins = "*") // Config abrindo acesso ao Front Futuramente
+@CrossOrigin(origins = "*")
 public class IntegranteController {
 
     private final IntegranteRepository integranteRepository;
@@ -32,7 +33,7 @@ public class IntegranteController {
     }
 
     @PostMapping
-    public ResponseEntity<Integrante> cadastrar(@RequestBody IntegranteDTO dto) {
+    public ResponseEntity<Integrante> cadastrar( @Valid @RequestBody IntegranteDTO dto) {
         Integrante novoIntegrante = new Integrante();
         novoIntegrante.setNome(dto.nome());
         novoIntegrante.setFranquia(dto.franquia());
